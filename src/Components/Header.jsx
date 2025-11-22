@@ -2,7 +2,7 @@ import React from 'react'
 
 function Header() {
     return (
-        <div className="w-full bg-gray-100 p-4 shadow-sm">
+        <div className="w-full bg-blue-500 p-4 shadow-sm">
             <div className="flex items-center justify-between">
                 <h1 className="text-2xl font-bold w-full text-center">
                     ToDo App

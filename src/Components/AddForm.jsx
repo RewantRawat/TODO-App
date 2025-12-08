@@ -1,6 +1,7 @@
 // src/components/AddForm.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
+import axios from "axios";
 import { useItems } from "../Context/ItemContext";
 
 function AddForm() {
@@ -14,6 +15,8 @@ function AddForm() {
   });
 
   const [errors, setErrors] = useState({});
+  const [submitPayload, setSubmitPayload] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const validate = (name, value) => {
     let newErrors = { ...errors };
@@ -57,6 +60,7 @@ function AddForm() {
   };
 
   const closeForm = () => {
+    if (isSubmitting) return;
     setShowForm(false);
   };
 
@@ -70,6 +74,49 @@ function AddForm() {
 
     validate(name, value);
   };
+
+
+  useEffect(() => {
+    if (!submitPayload) return;
+
+    const postTodo = async () => {
+      setIsSubmitting(true);
+      try {
+        const res = await axios.post(
+          "http://localhost:3000/addTodo",
+          submitPayload
+        );
+
+        const savedItem = res.data || submitPayload;
+        console.log("API Response:", savedItem);
+
+        
+        addItems(savedItem);
+
+        alert("Item added successfully!");
+
+     
+        setShowForm(false);
+        setFormData({
+          title: "",
+          description: "",
+          createdAt: "",
+        });
+      } catch (error) {
+        console.error("API Error:", error);
+        const message =
+          error?.response?.data?.message ||
+          error?.message ||
+          "Something went wrong while saving";
+        alert(message);
+      } finally {
+        setIsSubmitting(false);
+        setSubmitPayload(null); 
+      }
+    };
+
+    postTodo();
+  }, [submitPayload, addItems]);
 
   const handleSave = (e) => {
     e.preventDefault();
@@ -97,19 +144,18 @@ function AddForm() {
       return;
     }
 
-    // add to global context
-    addItems({
-      ...dataObj,
+    
+    setFormData((prev) => ({
+      ...prev,
       title,
       description,
-    });
+    }));
 
-    setShowForm(false);
-
-    setFormData({
-      title: "",
-      description: "",
-      createdAt: "",
+   ``
+    setSubmitPayload({
+      title,
+      description,
+      createdAt: formData.createdAt,
     });
   };
 
@@ -192,20 +238,21 @@ function AddForm() {
               <button
                 type="button"
                 onClick={closeForm}
-                className="px-5 py-2 rounded-lg border border-gray-300 bg-white text-gray-800 text-sm hover:bg-gray-100"
+                disabled={isSubmitting}
+                className="px-5 py-2 rounded-lg border border-gray-300 bg-white text-gray-800 text-sm hover:bg-gray-100 disabled:opacity-60"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                disabled={!isFormValid}
+                disabled={!isFormValid || isSubmitting}
                 className={`px-6 py-2 rounded-lg text-sm font-medium text-white ${
-                  isFormValid
+                  isFormValid && !isSubmitting
                     ? "bg-indigo-500 hover:bg-indigo-600"
                     : "bg-indigo-300 cursor-not-allowed"
                 }`}
               >
-                Save Item
+                {isSubmitting ? "Saving..." : "Save Item"}
               </button>
             </div>
           </form>

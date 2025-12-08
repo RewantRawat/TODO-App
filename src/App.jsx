@@ -5,12 +5,12 @@ import Search from "./Components/Search"
 
 function App(){
   return (
-  <>
+  <div className="container mx-auto">
     <Header/>
     <Search/>
     <AddForm/>
     <SavedItems/>
-  </>
+  </div>
   )
 }
 

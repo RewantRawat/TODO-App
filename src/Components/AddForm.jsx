@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import axios from "axios";
 import { useItems } from "../Context/ItemContext";
+import { toast } from "react-toastify";
 
 function AddForm() {
   const [showForm, setShowForm] = useState(false);
@@ -90,12 +91,12 @@ function AddForm() {
         const savedItem = res.data || submitPayload;
         console.log("API Response:", savedItem);
 
-        
+
         addItems(savedItem);
 
-        alert("Item added successfully!");
+        toast.success("Todo's Added successfully!")
 
-     
+
         setShowForm(false);
         setFormData({
           title: "",
@@ -111,7 +112,7 @@ function AddForm() {
         alert(message);
       } finally {
         setIsSubmitting(false);
-        setSubmitPayload(null); 
+        setSubmitPayload(null);
       }
     };
 
@@ -144,14 +145,14 @@ function AddForm() {
       return;
     }
 
-    
+
     setFormData((prev) => ({
       ...prev,
       title,
       description,
     }));
 
-   ``
+    ``
     setSubmitPayload({
       title,
       description,
@@ -170,7 +171,7 @@ function AddForm() {
       <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
         <div className="bg-white rounded-2xl w-full max-w-xl shadow-2xl p-8">
           <h3 className="text-2xl font-semibold mb-4 text-gray-900">
-            Add New Item
+            Add New Item  
           </h3>
           <hr className="mb-6" />
 
@@ -184,11 +185,10 @@ function AddForm() {
                 name="title"
                 value={formData.title}
                 onChange={handleChange}
-                className={`w-full p-3 border rounded-lg outline-none focus:ring-2 text-sm ${
-                  errors.title
+                className={`w-full p-3 border rounded-lg outline-none focus:ring-2 text-sm ${errors.title
                     ? "border-red-500 focus:ring-red-400"
                     : "border-gray-300 focus:ring-blue-500"
-                }`}
+                  }`}
                 placeholder="Enter item title (min 3 chars)"
               />
               {errors.title && (
@@ -204,11 +204,10 @@ function AddForm() {
                 name="description"
                 value={formData.description}
                 onChange={handleChange}
-                className={`w-full p-3 border rounded-lg outline-none focus:ring-2 resize-none text-sm ${
-                  errors.description
+                className={`w-full p-3 border rounded-lg outline-none focus:ring-2 resize-none text-sm ${errors.description
                     ? "border-red-500 focus:ring-red-400"
                     : "border-gray-300 focus:ring-blue-500"
-                }`}
+                  }`}
                 placeholder="Enter item description (min 10 chars)"
                 rows={4}
               />
@@ -246,11 +245,10 @@ function AddForm() {
               <button
                 type="submit"
                 disabled={!isFormValid || isSubmitting}
-                className={`px-6 py-2 rounded-lg text-sm font-medium text-white ${
-                  isFormValid && !isSubmitting
+                className={`px-6 py-2 rounded-lg text-sm font-medium text-white ${isFormValid && !isSubmitting
                     ? "bg-indigo-500 hover:bg-indigo-600"
                     : "bg-indigo-300 cursor-not-allowed"
-                }`}
+                  }`}
               >
                 {isSubmitting ? "Saving..." : "Save Item"}
               </button>
@@ -263,12 +261,15 @@ function AddForm() {
 
   return (
     <div className="p-5 font-sans">
-      <button
-        onClick={openForm}
-        className="px-4 py-2 rounded border border-gray-800 cursor-pointer hover:bg-gray-100"
-      >
-        Add
-      </button>
+<div className="w-full flex justify-center mt-4">
+  <button
+    onClick={openForm}
+    className="flex items-center gap-2 px-6 py-2 rounded-lg bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-200 active:scale-95"
+  >
+    ➕ Add Todos
+  </button>
+</div>
+
 
       {modal}
     </div>

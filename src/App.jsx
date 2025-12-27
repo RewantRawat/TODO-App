@@ -1,17 +1,27 @@
-import AddForm from "./Components/AddForm"
-import Header from "./Components/Header"
-import SavedItems from "./Components/SavedItems"
-import Search from "./Components/Search"
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Login from "./Components/Login";
+import Home from "./Components/Home";
+import ProtectedRoute from "./Protected/ProtectedRoute";
 
-function App(){
+function App() {
   return (
-  <div className="container mx-auto">
-    <Header/>
-    <Search/>
-    <AddForm/>
-    <SavedItems/>
-  </div>
-  )
+    <BrowserRouter>
+      <Routes>
+
+        <Route path="/login" element={<Login />} />
+
+
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <Home />
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;

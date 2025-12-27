@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { UpdateTodolist } from "../Lib/UpdateTodoList";
+import { toast } from "react-toastify";
 
 function EditTodoForm({ isOpen, todo, onClose, onUpdated }) {
   const [formData, setFormData] = useState({
@@ -57,14 +58,15 @@ function EditTodoForm({ isOpen, todo, onClose, onUpdated }) {
         createdAt: formData.createdAt,
       };
 
-      await UpdateTodolist(todo._id, payload);      // 👈 PUT API TRIGGERED HERE
+      await UpdateTodolist(todo._id, payload);     
 
       const updatedTodo = { ...todo, ...payload };
-      onUpdated(updatedTodo);                       // update UI list
-      onClose();                                    // close modal
+      onUpdated(updatedTodo);                       
+      onClose();       
+      toast.success("Todos edited succesfully")                             
     } catch (err) {
       console.error("Update error:", err);
-      alert("Failed to update todo");
+      toast.error("Failed to update todo");
     } finally {
       setIsSubmitting(false);
     }

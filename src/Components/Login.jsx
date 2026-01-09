@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 function Login() {
   const navigate = useNavigate();
@@ -36,23 +36,15 @@ function Login() {
       setMessage("");
       setSuccess("");
 
-      const res = await axios.post(
-        "http://localhost:3000/login",
-        formData
-      );
+      const res = await axios.post("http://localhost:3000/login", formData);
 
       setSuccess(res.data.message);
-
-   
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("user", JSON.stringify(res.data.user));
 
-       navigate("/");
-
+      navigate("/");
     } catch (error) {
-      setMessage(
-        error.response?.data?.message || "Something went wrong"
-      );
+      setMessage(error.response?.data?.message || "Something went wrong");
     } finally {
       setLoading(false);
     }
@@ -61,53 +53,85 @@ function Login() {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) navigate("/");
-  }, []);
+  }, [navigate]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="w-full max-w-md bg-white p-8 rounded-xl shadow-lg">
-        <h2 className="text-2xl font-bold text-center mb-6">
-          Login to Your Account
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700">
+      <div className="w-full max-w-md bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl shadow-2xl p-8">
+        
+        {/* Heading */}
+        <h2 className="text-3xl font-bold text-center text-white mb-2">
+          Welcome Back 👋
         </h2>
+        <p className="text-center text-sm text-gray-200 mb-6">
+          Login to continue
+        </p>
 
+        {/* Error */}
         {message && (
-          <p className="text-center text-sm text-red-500 mb-4">
+          <p className="text-center text-sm text-red-400 mb-4">
             {message}
           </p>
         )}
 
+        {/* Success */}
         {success && (
-          <p className="text-center text-sm text-green-600 mb-4">
+          <p className="text-center text-sm text-green-400 mb-4">
             {success}
           </p>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <input
-            type="email"
-            name="email"
-            placeholder="Email"
-            value={formData.email}
-            onChange={handleChange}
-            className="w-full px-4 py-2 border rounded-lg"
-          />
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="space-y-5">
+          {/* Email */}
+          <div>
+            <label className="text-sm text-gray-200 mb-1 block">
+              Email
+            </label>
+            <input
+              type="email"
+              name="email"
+              placeholder="you@example.com"
+              value={formData.email}
+              onChange={handleChange}
+              className="w-full px-4 py-2.5 rounded-lg bg-white/20 text-white placeholder-gray-300 border border-white/30 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            />
+          </div>
 
-          <input
-            type="password"
-            name="password"
-            placeholder="Password"
-            value={formData.password}
-            onChange={handleChange}
-            className="w-full px-4 py-2 border rounded-lg"
-          />
+          {/* Password */}
+          <div>
+            <label className="text-sm text-gray-200 mb-1 block">
+              Password
+            </label>
+            <input
+              type="password"
+              name="password"
+              placeholder="••••••••"
+              value={formData.password}
+              onChange={handleChange}
+              className="w-full px-4 py-2.5 rounded-lg bg-white/20 text-white placeholder-gray-300 border border-white/30 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            />
+          </div>
 
+          {/* Button */}
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700"
+            className="w-full py-2.5 rounded-lg font-semibold text-white bg-gradient-to-r from-blue-500 to-indigo-500 hover:opacity-90 transition disabled:opacity-60"
           >
             {loading ? "Logging in..." : "Login"}
           </button>
+
+          {/* Signup */}
+          <div className="text-center text-sm text-gray-200">
+            Don’t have an account?{" "}
+            <Link
+              to="/signup"
+              className="text-blue-300 hover:underline font-medium"
+            >
+              Signup
+            </Link>
+          </div>
         </form>
       </div>
     </div>

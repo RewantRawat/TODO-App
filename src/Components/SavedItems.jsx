@@ -64,7 +64,7 @@ function SavedItems() {
     if (!confirmDelete) return;
 
     try {
-      await axios.delete(`${ApiUrl}deleteTodo/${id}`);
+      await axios.delete(`${ApiUrl}/deleteTodo/${id}`);
       setDatas((prev) => prev.filter((t) => t._id !== id));
      
 
